@@ -25,7 +25,7 @@ There are currently no automated tests. Add `vitest` and `playwright` when ready
 - Initialized Vite + React + Tailwind structure.
 - Added API route for Vimeo files.
 - Added deployment workflow skeleton.
-- TODO: Implement WebGL shader logic in `asciiWorker.ts`.
+- Implemented WebGL shader logic in `asciiWorker.ts`.
 
 ## Governing Principles
 

@@ -4,17 +4,27 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const worker = new Worker(new URL('../workers/asciiWorker.ts', import.meta.url), { type: 'module' })
-    let raf: number
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    function loop() {
+    const offscreen = canvas.transferControlToOffscreen()
+    const worker = new Worker(new URL('../workers/asciiWorker.ts', import.meta.url), { type: 'module' })
+    worker.postMessage({ canvas: offscreen }, [offscreen])
+
+    let raf: number
+    async function loop() {
       const video = target.current
-      const canvas = canvasRef.current
-      if (video && canvas) worker.postMessage({ video, canvas })
+      if (video) {
+        const frame = await createImageBitmap(video)
+        worker.postMessage({ frame }, [frame])
+      }
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      worker.terminate()
+    }
   }, [target])
 
   return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
