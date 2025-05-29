@@ -28,5 +28,5 @@ The static files will be in the `dist/` directory.
 A GitHub Action in `.github/workflows/deploy.yml` builds the project and uploads the bundle to your Webflow CDN bucket via `wrangler r2`.
 
 ## Notes
-- This is a starter skeleton. The WebGL shader in `src/workers/asciiWorker.ts` still needs to be implemented.
+- The ASCII worker implements a simple shader pipeline for real-time rendering.
 - Update the Webflow embed script to point to your CDN.
