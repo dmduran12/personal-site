@@ -33,7 +33,7 @@ pnpm run build
 The static files will be in the `dist/` directory.
 
 ## Deployment
-A GitHub Action in `.github/workflows/deploy.yml` builds the project and uploads the bundle to your Webflow CDN bucket via `wrangler r2`.
+A GitHub Action in `.github/workflows/deploy.yml` builds the project and uploads the bundle to your Webflow CDN bucket via `wrangler r2 object put`.
 
 ## Notes
 - The ASCII worker implements a simple shader pipeline for real-time rendering.
