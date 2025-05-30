@@ -26,6 +26,7 @@ There are currently no automated tests. Add `vitest` and `playwright` when ready
 - Added API route for Vimeo files.
 - Added deployment workflow skeleton.
 - Implemented WebGL shader logic in `asciiWorker.ts`.
+- Installed SWR and added in-memory caching for Vimeo API.
 
 ## Governing Principles
 

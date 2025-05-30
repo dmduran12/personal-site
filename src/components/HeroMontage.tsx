@@ -2,11 +2,26 @@ import { useRef } from 'react'
 import useSWR from 'swr'
 import { AsciiLayer } from './AsciiLayer'
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+type VideoData = { src: string; width: number; height: number }
+
+const fetcher = async (url: string) => {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch')
+  return res.json()
+}
 
 export function HeroMontage() {
-  const { data } = useSWR('/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_RIP_URL, fetcher)
+  const { data, error } = useSWR<VideoData>(
+    '/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_RIP_URL,
+    fetcher
+  )
   const videoRef = useRef<HTMLVideoElement>(null)
+
+  if (error) {
+    return (
+      <div className="p-4 text-red-500">Failed to load video</div>
+    )
+  }
 
   return (
     <section className="fixed inset-0 overflow-hidden">
