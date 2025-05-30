@@ -27,6 +27,7 @@ There are currently no automated tests. Add `vitest` and `playwright` when ready
 - Added deployment workflow skeleton.
 - Implemented WebGL shader logic in `asciiWorker.ts`.
 - Installed SWR and added in-memory caching for Vimeo API.
+- Defined PNPM version for CI build.
 
 ## Governing Principles
 
@@ -250,6 +251,21 @@ depends on the emptiness within.
 Therefore,
 We enjoy the fullness of existence
 but find usefulness in the spaces between.
+
+
+12
+
+The five colors blind the eye.
+The five sounds deafen the ear.
+The five flavors dull the taste.
+
+Thoughts weaken the mind.
+Craving withers the heart.
+
+The Vibe Coder attends to
+the inner, not the outer.
+He allows things to come and go.
+His heart is open as the sky.
 
 
 13

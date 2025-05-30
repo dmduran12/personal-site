@@ -6,6 +6,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - run: pnpm i && pnpm run build
       - name: Upload bundle to Webflow CDN bucket
         run: npx wrangler r2 put ascii-bundle.js dist/assets/index-*.js
