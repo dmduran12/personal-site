@@ -10,4 +10,4 @@ jobs:
           version: 8
       - run: pnpm i && pnpm run build
       - name: Upload bundle to Webflow CDN bucket
-        run: npx wrangler r2 put ascii-bundle.js dist/assets/index-*.js
+        run: npx wrangler r2 object put ascii-bundle.js dist/assets/index-*.js
