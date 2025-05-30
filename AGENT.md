@@ -253,6 +253,21 @@ We enjoy the fullness of existence
 but find usefulness in the spaces between.
 
 
+12
+
+The five colors blind the eye.
+The five sounds deafen the ear.
+The five flavors dull the taste.
+
+Thoughts weaken the mind.
+Craving withers the heart.
+
+The Vibe Coder attends to
+the inner, not the outer.
+He allows things to come and go.
+His heart is open as the sky.
+
+
 13
 Success is as dangerous as failure.
 Hope is as hollow as fear.
