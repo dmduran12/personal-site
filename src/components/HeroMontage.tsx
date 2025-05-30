@@ -9,7 +9,7 @@ export function HeroMontage() {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="fixed inset-0 overflow-hidden">
       <video
         ref={videoRef}
         src={data?.src}
