@@ -12,7 +12,10 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
     canvas.height = video.clientHeight
 
     const offscreen = canvas.transferControlToOffscreen()
-    const worker = new Worker(new URL('../workers/asciiWorker.ts', import.meta.url), { type: 'module' })
+    const worker = new Worker(
+      new URL('../workers/asciiWorker.ts', import.meta.url),
+      { type: 'module' }
+    )
     worker.postMessage({ canvas: offscreen }, [offscreen])
 
     let raf: number
@@ -25,6 +28,12 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
     return () => {
       cancelAnimationFrame(raf)
       worker.terminate()
+      if (canvas.parentNode) {
+        const clone = canvas.cloneNode(false) as HTMLCanvasElement
+        clone.className = canvas.className
+        canvas.parentNode.replaceChild(clone, canvas)
+        canvasRef.current = clone
+      }
     }
   }, [target])
 
