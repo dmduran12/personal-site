@@ -35,11 +35,22 @@ export default async function handler(req: NextRequest) {
         { status: res.status }
       )
     }
-    const json = await res.json()
+    const json = await res.json().catch(e => {
+      console.error('Failed to parse Vimeo response', e)
+      return null
+    })
+    if (!json || !Array.isArray(json.files)) {
+      console.error('Invalid Vimeo data:', json)
+      return new Response('Bad upstream response', { status: 502 })
+    }
 
     const mp4 = json.files
       .filter((f: any) => f.type === 'video/mp4')
       .sort((a: any, b: any) => b.width - a.width)[0]
+    if (!mp4) {
+      console.error('No MP4 file found in Vimeo response')
+      return new Response('No suitable video', { status: 502 })
+    }
 
     const payload = { src: mp4.link, width: mp4.width, height: mp4.height }
     console.log(`Fetched Vimeo video ${id}`)
