@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-pnpm install
-pnpm dev
+set -e
+corepack pnpm install
+corepack pnpm dev

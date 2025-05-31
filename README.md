@@ -3,28 +3,29 @@
 This repo contains a React/Vite project that plays a Vimeo video and renders it as real-time ASCII art. Follow these steps to run it locally.
 
 ## Prerequisites
-- [Node.js](https://nodejs.org/) 18+
-- [pnpm](https://pnpm.io/) package manager
+- [Node.js](https://nodejs.org/) 18+ (Corepack enabled)
+- [pnpm](https://pnpm.io/) 8.9.0
 
 ## Setup
 1. Copy `.env.example` to `.env` and fill in your `VIMEO_TOKEN` and `VITE_VIMEO_VIDEO_ID`.
 2. Install dependencies:
    ```bash
-   pnpm install
+   corepack pnpm install
    ```
 3. Start the dev server:
    ```bash
-   pnpm dev
+   corepack pnpm dev
    ```
    The app will be available at `http://localhost:5173`.
 
 ## Codespaces
-For development inside GitHub Codespaces, run the helper script:
+For development inside GitHub Codespaces, run the helper script. The repository
+includes a devcontainer configuration that installs Node.js 18 and pnpm for you:
 
 ```bash
 ./scripts/start.sh
 ```
-This installs dependencies and starts the dev server automatically.
+This script installs dependencies and starts the dev server automatically.
 
 ## Building for Production
 ```bash
