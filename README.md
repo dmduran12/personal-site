@@ -29,7 +29,7 @@ This script installs dependencies and starts the dev server automatically.
 
 ## Building for Production
 ```bash
-pnpm run build
+corepack pnpm run build
 ```
 The static files will be in the `dist/` directory.
 
