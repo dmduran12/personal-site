@@ -13,6 +13,15 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    VIMEO_TOKEN=<your-vimeo-token>
    VITE_VIMEO_VIDEO_ID=<your-video-id>
    ```
+
+   You can quickly generate this file with:
+
+   ```bash
+   cat > .env <<'EOF'
+   VIMEO_TOKEN=<your-vimeo-token>
+   VITE_VIMEO_VIDEO_ID=<your-video-id>
+   EOF
+   ```
 2. Install dependencies:
    ```bash
    corepack pnpm install
