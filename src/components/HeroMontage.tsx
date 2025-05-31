@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { AsciiLayer } from './AsciiLayer'
 
@@ -6,20 +6,46 @@ type VideoData = { src: string; width: number; height: number }
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
-  if (!res.ok) throw new Error('Failed to fetch')
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`HTTP ${res.status}: ${text}`)
+  }
   return res.json()
 }
 
 export function HeroMontage() {
   const { data, error } = useSWR<VideoData>(
     '/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_VIDEO_ID,
-    fetcher
+    fetcher,
+    { onError: err => console.error('Vimeo fetch error:', err) }
   )
   const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoError, setVideoError] = useState<string | null>(null)
 
-  if (error) {
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const handleError = () => {
+      console.error('Video element error', video.error)
+      setVideoError('Failed to play video')
+    }
+    const handleLoaded = () => {
+      console.log('Video loaded')
+      setVideoError(null)
+    }
+    video.addEventListener('error', handleError)
+    video.addEventListener('loadeddata', handleLoaded)
+    return () => {
+      video.removeEventListener('error', handleError)
+      video.removeEventListener('loadeddata', handleLoaded)
+    }
+  }, [data])
+
+  if (error || videoError) {
     return (
-      <div className="p-4 text-red-500">Failed to load video</div>
+      <div className="p-4 text-red-500">
+        {error ? error.message : videoError}
+      </div>
     )
   }
 

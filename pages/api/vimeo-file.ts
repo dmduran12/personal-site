@@ -28,7 +28,12 @@ export default async function handler(req: NextRequest) {
       headers: { Authorization: `bearer ${VIMEO}` }
     })
     if (!res.ok) {
-      return new Response('Upstream error', { status: res.status })
+      const text = await res.text()
+      console.error('Vimeo API error:', res.status, text)
+      return Response.json(
+        { error: 'Upstream error', status: res.status },
+        { status: res.status }
+      )
     }
     const json = await res.json()
 
@@ -37,6 +42,7 @@ export default async function handler(req: NextRequest) {
       .sort((a: any, b: any) => b.width - a.width)[0]
 
     const payload = { src: mp4.link, width: mp4.width, height: mp4.height }
+    console.log(`Fetched Vimeo video ${id}`)
     cache.set(cacheKey, payload)
     setTimeout(() => cache.delete(cacheKey), CACHE * 1000)
     return Response.json(payload, { headers: { 'x-cache': 'MISS' } })
