@@ -6,18 +6,28 @@ type VideoData = { src: string; width: number; height: number }
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
-  if (!res.ok) {
-    const text = await res.text()
-    throw new Error(`HTTP ${res.status}: ${text}`)
+  const type = res.headers.get('content-type') || ''
+  if (!res.ok || !type.includes('application/json')) {
+    const text = await res.text().catch(() => '')
+    const message = !res.ok
+      ? `HTTP ${res.status}: ${text}`
+      : `Unexpected content-type ${type}`
+    throw new Error(message)
   }
   return res.json()
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE || ''
+
 export function HeroMontage() {
   const { data, error } = useSWR<VideoData>(
-    '/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_VIDEO_ID,
+    `${API_BASE}/api/vimeo-file?id=${import.meta.env.VITE_VIMEO_VIDEO_ID}`,
     fetcher,
-    { onError: err => console.error('Vimeo fetch error:', err) }
+    {
+      onError: err => console.error('Vimeo fetch error:', err),
+      revalidateOnFocus: false,
+      shouldRetryOnError: false
+    }
   )
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoError, setVideoError] = useState<string | null>(null)

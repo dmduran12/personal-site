@@ -12,6 +12,7 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    ```bash
    VIMEO_TOKEN=<your-vimeo-token>
    VITE_VIMEO_VIDEO_ID=<your-video-id>
+   VITE_API_BASE=<optional-api-base-url>
    ```
 
    You can quickly generate this file with:
@@ -20,6 +21,7 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    cat > .env <<'EOF'
    VIMEO_TOKEN=<your-vimeo-token>
    VITE_VIMEO_VIDEO_ID=<your-video-id>
+   VITE_API_BASE=<optional-api-base-url>
    EOF
    ```
 2. Install dependencies:
