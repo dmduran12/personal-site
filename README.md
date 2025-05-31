@@ -7,7 +7,7 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
 - [pnpm](https://pnpm.io/) package manager
 
 ## Setup
-1. Copy `.env.example` to `.env` and fill in your `VIMEO_TOKEN` and `VITE_VIMEO_RIP_URL`.
+1. Copy `.env.example` to `.env` and fill in your `VIMEO_TOKEN` and `VITE_VIMEO_VIDEO_ID`.
 2. Install dependencies:
    ```bash
    pnpm install
