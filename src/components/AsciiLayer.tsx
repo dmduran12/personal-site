@@ -8,13 +8,8 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
     const video = target.current
     if (!canvas || !video) return
 
-    const resize = () => {
-      canvas.width = video.clientWidth
-      canvas.height = video.clientHeight
-    }
-    resize()
-    const observer = new ResizeObserver(resize)
-    observer.observe(video)
+    canvas.width = video.clientWidth
+    canvas.height = video.clientHeight
 
     const offscreen = canvas.transferControlToOffscreen()
     const worker = new Worker(new URL('../workers/asciiWorker.ts', import.meta.url), { type: 'module' })
@@ -30,7 +25,6 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
     return () => {
       cancelAnimationFrame(raf)
       worker.terminate()
-      observer.disconnect()
     }
   }, [target])
 
