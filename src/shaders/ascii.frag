@@ -1,3 +1,5 @@
+precision mediump float;
+
 uniform sampler2D uFrame;
 uniform sampler2D uGlyphs;
 varying vec2 v_uv;

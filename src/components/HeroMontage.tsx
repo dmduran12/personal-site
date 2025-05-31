@@ -87,9 +87,6 @@ export function HeroMontage() {
         className="absolute inset-0 h-full w-full object-cover"
       />
       <AsciiLayer target={videoRef} />
-      <div className="relative z-10 p-6 text-white mix-blend-difference">
-        <h1 className="text-4xl font-bold">Danny Duran — Creative Director</h1>
-      </div>
     </section>
   )
 }
