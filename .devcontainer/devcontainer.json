@@ -6,5 +6,6 @@
       "version": "8.9.0"
     }
   },
-  "postCreateCommand": "pnpm install"
+  "postCreateCommand": "corepack pnpm install",
+  "forwardPorts": [5173]
 }
