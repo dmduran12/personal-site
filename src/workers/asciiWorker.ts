@@ -22,6 +22,7 @@ self.onmessage = ({ data }) => {
 
 function init(gl: WebGL2RenderingContext) {
   const vertSrc = `
+    precision mediump float;
     attribute vec2 position;
     varying vec2 v_uv;
     void main() {
@@ -33,15 +34,24 @@ function init(gl: WebGL2RenderingContext) {
   const vs = gl.createShader(gl.VERTEX_SHADER)!
   gl.shaderSource(vs, vertSrc)
   gl.compileShader(vs)
+  if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+    console.error('Vertex shader error:', gl.getShaderInfoLog(vs))
+  }
 
   const fs = gl.createShader(gl.FRAGMENT_SHADER)!
   gl.shaderSource(fs, asciiFrag)
   gl.compileShader(fs)
+  if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+    console.error('Fragment shader error:', gl.getShaderInfoLog(fs))
+  }
 
   program = gl.createProgram()!
   gl.attachShader(program, vs)
   gl.attachShader(program, fs)
   gl.linkProgram(program)
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error('Program link error:', gl.getProgramInfoLog(program))
+  }
 
   vao = gl.createVertexArray()!
   gl.bindVertexArray(vao)
