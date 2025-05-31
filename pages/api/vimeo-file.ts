@@ -3,11 +3,13 @@ import type { NextRequest } from 'next/server'
 export const runtime = 'edge'
 
 const VIMEO = process.env.VIMEO_TOKEN!
+const DEFAULT_ID = process.env.VITE_VIMEO_VIDEO_ID
 const CACHE = 60 * 60 * 24
 const cache = new Map<string, any>()
 
 export default async function handler(req: NextRequest) {
-  const id = req.nextUrl.searchParams.get('id')?.match(/\d+/)?.[0]
+  const id =
+    req.nextUrl.searchParams.get('id')?.match(/\d+/)?.[0] ?? DEFAULT_ID
   if (!id) return new Response('Bad ID', { status: 400 })
 
   const cacheKey = `vimeo-${id}`
