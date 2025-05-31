@@ -2,15 +2,22 @@ import type { NextRequest } from 'next/server'
 
 export const runtime = 'edge'
 
-const VIMEO = process.env.VIMEO_TOKEN!
+const VIMEO = process.env.VIMEO_TOKEN
 const DEFAULT_ID = process.env.VITE_VIMEO_VIDEO_ID
 const CACHE = 60 * 60 * 24
 const cache = new Map<string, any>()
 
 export default async function handler(req: NextRequest) {
+  if (!VIMEO) {
+    console.error('VIMEO_TOKEN is not set')
+    return new Response('Server misconfiguration', { status: 500 })
+  }
   const id =
     req.nextUrl.searchParams.get('id')?.match(/\d+/)?.[0] ?? DEFAULT_ID
-  if (!id) return new Response('Bad ID', { status: 400 })
+  if (!id) {
+    console.error('VITE_VIMEO_VIDEO_ID is not set')
+    return new Response('Server misconfiguration', { status: 500 })
+  }
 
   const cacheKey = `vimeo-${id}`
   const cached = cache.get(cacheKey)
