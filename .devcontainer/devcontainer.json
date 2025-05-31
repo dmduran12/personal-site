@@ -1,0 +1,10 @@
+{
+  "name": "Personal Site",
+  "image": "mcr.microsoft.com/devcontainers/node:18",
+  "features": {
+    "ghcr.io/devcontainers/features/pnpm:1": {
+      "version": "8.9.0"
+    }
+  },
+  "postCreateCommand": "pnpm install"
+}
