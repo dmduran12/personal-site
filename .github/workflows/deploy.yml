@@ -1,4 +1,4 @@
-name: build-and-upload
+name: build
 on: [push]
 jobs:
   build:
@@ -10,5 +10,3 @@ jobs:
           version: 8.9.0
           run_install: false
       - run: pnpm i && pnpm run build
-      - name: Upload bundle to Webflow CDN bucket
-        run: npx wrangler r2 object put ascii-bundle.js dist/assets/index-*.js
