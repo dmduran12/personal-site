@@ -20,7 +20,9 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
 
 ## Codespaces
 For development inside GitHub Codespaces, run the helper script. The repository
-includes a devcontainer configuration that installs Node.js 18 and pnpm for you:
+includes a devcontainer configuration based on the `base:ubuntu` image. Node.js
+18 and pnpm are installed via devcontainer features, ensuring the container can
+be created even if the Node-specific image is unavailable:
 
 ```bash
 ./scripts/start.sh
