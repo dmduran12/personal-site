@@ -8,7 +8,8 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
 
 ## Setup
 1. Fill in `.env` with your `VIMEO_TOKEN` and `VITE_VIMEO_VIDEO_ID`.
-2. Install dependencies:
+2. 
+3. Install dependencies:
    ```bash
    pnpm install
    ```
