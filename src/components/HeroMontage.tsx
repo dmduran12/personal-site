@@ -11,7 +11,8 @@ const fetcher = async (url: string) => {
     headers: { Authorization: `bearer ${VIMEO_TOKEN}` }
   })
   const type = res.headers.get('content-type') || ''
-  if (!res.ok || !type.includes('application/json')) {
+  const isJson = type.includes('application/json') || type.includes('+json')
+  if (!res.ok || !isJson) {
     const text = await res.text().catch(() => '')
     const message = !res.ok
       ? `HTTP ${res.status}: ${text}`
