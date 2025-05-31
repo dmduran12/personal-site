@@ -7,7 +7,12 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
 - [pnpm](https://pnpm.io/) 8.9.0
 
 ## Setup
-1. Copy `.env.example` to `.env` and fill in your `VIMEO_TOKEN` and `VITE_VIMEO_VIDEO_ID`.
+1. Create a `.env` file in the project root with the following variables:
+
+   ```bash
+   VIMEO_TOKEN=<your-vimeo-token>
+   VITE_VIMEO_VIDEO_ID=<your-video-id>
+   ```
 2. Install dependencies:
    ```bash
    corepack pnpm install
