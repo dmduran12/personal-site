@@ -20,8 +20,10 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
 
     let raf: number
     async function loop() {
-      const frame = await createImageBitmap(video)
-      worker.postMessage({ frame }, [frame])
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        const frame = await createImageBitmap(video)
+        worker.postMessage({ frame }, [frame])
+      }
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
