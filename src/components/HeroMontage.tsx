@@ -12,7 +12,7 @@ const fetcher = async (url: string) => {
 
 export function HeroMontage() {
   const { data, error } = useSWR<VideoData>(
-    '/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_RIP_URL,
+    '/api/vimeo-file?id=' + import.meta.env.VITE_VIMEO_VIDEO_ID,
     fetcher
   )
   const videoRef = useRef<HTMLVideoElement>(null)
