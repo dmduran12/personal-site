@@ -19,15 +19,12 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    The app will be available at `http://localhost:5173`.
 
 ## Codespaces
-For development inside GitHub Codespaces, run the helper script. The repository
-includes a devcontainer configuration based on the `base:ubuntu` image. Node.js
-18 and pnpm are installed via devcontainer features, ensuring the container can
-be created even if the Node-specific image is unavailable:
+For development inside GitHub Codespaces, run the helper script:
 
 ```bash
 ./scripts/start.sh
 ```
-This script installs dependencies and starts the dev server automatically.
+It installs dependencies and starts the dev server automatically.
 
 ## Building for Production
 ```bash
