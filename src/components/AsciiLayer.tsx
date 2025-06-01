@@ -1,4 +1,38 @@
 import { RefObject, useEffect, useRef } from 'react'
+function startFallback(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
+  canvas.width = video.clientWidth
+  canvas.height = video.clientHeight
+  const ctx = canvas.getContext('2d')!
+  const ascii = '$#WMN8HAE69CFY+?'
+  const cellW = 6
+  const cellH = 8
+  ctx.font = '700 10px/8px "SF Mono", "IBM Plex Mono", monospace'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  let raf: number
+  const draw = () => {
+    const cols = Math.floor(canvas.width / cellW)
+    const rows = Math.floor(canvas.height / cellH)
+    ctx.drawImage(video, 0, 0, cols, rows)
+    const data = ctx.getImageData(0, 0, cols, rows).data
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const i = (y * cols + x) * 4
+        const r = data[i]
+        const g = data[i + 1]
+        const b = data[i + 2]
+        const lum = r * 0.2126 + g * 0.7152 + b * 0.0722
+        const index = Math.min(ascii.length - 1, Math.floor(lum / 255 * (ascii.length - 1)))
+        ctx.fillStyle = `rgb(${r},${g},${b})`
+        ctx.fillText(ascii[index], x * cellW + cellW / 2, y * cellH + cellH / 2)
+      }
+    }
+    raf = requestAnimationFrame(draw)
+  }
+  draw()
+  return () => cancelAnimationFrame(raf)
+}
 
 export function AsciiLayer({
   target,
@@ -16,10 +50,11 @@ export function AsciiLayer({
     const video = target.current
     if (!canvas || !video || !ready) return
 
-    if (!('transferControlToOffscreen' in canvas) ||
-        typeof OffscreenCanvas === 'undefined') {
-      onError?.('OffscreenCanvas not supported')
-      return
+    if (!("transferControlToOffscreen" in canvas) ||
+        typeof OffscreenCanvas === "undefined" ||
+        !("WebGL2RenderingContext" in window)) {
+      onError?.(null)
+      return startFallback(canvas, video)
     }
 
     canvas.width = video.clientWidth
