@@ -29,6 +29,16 @@ There are currently no automated tests. Add `vitest` and `playwright` when ready
 - Installed SWR and added in-memory caching for Vimeo API.
 - Defined PNPM version for CI build.
 
+## API Usage
+Always fetch Vimeo data directly using:
+
+```
+https://api.vimeo.com/videos/<video-id>
+```
+
+Include an `Authorization: bearer <token>` header with the request.
+Do not use the `/api/vimeo-file` proxy route.
+
 ## Governing Principles
 
 THE WAY
