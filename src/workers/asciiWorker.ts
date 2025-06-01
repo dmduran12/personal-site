@@ -14,13 +14,22 @@ let uCellCountLoc: WebGLUniformLocation | null = null
 const CELL_W = 6
 const CELL_H = 8
 
+function postError(msg: string) {
+  self.postMessage({ error: msg })
+}
+
 self.onmessage = ({ data }) => {
   if (data.canvas) {
     const canvas = data.canvas as OffscreenCanvas
     displayCtx = canvas.getContext('2d')
     glCanvas = new OffscreenCanvas(canvas.width, canvas.height)
     gl = glCanvas.getContext('webgl2')
-    if (gl) init(gl)
+    if (!gl) {
+      postError('WebGL2 not supported')
+      return
+    }
+    init(gl)
+    self.postMessage({ ready: true })
     return
   }
 
@@ -44,14 +53,16 @@ function init(gl: WebGL2RenderingContext) {
   gl.shaderSource(vs, vertSrc)
   gl.compileShader(vs)
   if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
-    console.error('Vertex shader error:', gl.getShaderInfoLog(vs))
+    const msg = gl.getShaderInfoLog(vs) || 'vertex shader'
+    postError(`Vertex shader error: ${msg}`)
   }
 
   const fs = gl.createShader(gl.FRAGMENT_SHADER)!
   gl.shaderSource(fs, asciiFrag)
   gl.compileShader(fs)
   if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
-    console.error('Fragment shader error:', gl.getShaderInfoLog(fs))
+    const msg = gl.getShaderInfoLog(fs) || 'fragment shader'
+    postError(`Fragment shader error: ${msg}`)
   }
 
   program = gl.createProgram()!
@@ -59,7 +70,8 @@ function init(gl: WebGL2RenderingContext) {
   gl.attachShader(program, fs)
   gl.linkProgram(program)
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('Program link error:', gl.getProgramInfoLog(program))
+    const msg = gl.getProgramInfoLog(program) || 'link'
+    postError(`Program link error: ${msg}`)
   }
 
   vao = gl.createVertexArray()!
@@ -149,6 +161,10 @@ function createGlyphTexture(gl: WebGL2RenderingContext) {
 function render(gl: WebGL2RenderingContext, frame: ImageBitmap) {
   if (glCanvas) {
     gl.viewport(0, 0, glCanvas.width, glCanvas.height)
+  }
+  if (!program || !vao || !frameTex || !glyphTex) {
+    postError('ASCII pipeline not initialized')
+    return
   }
   gl.useProgram(program)
   gl.bindVertexArray(vao)

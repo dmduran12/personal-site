@@ -2,10 +2,12 @@ import { RefObject, useEffect, useRef } from 'react'
 
 export function AsciiLayer({
   target,
-  ready
+  ready,
+  onError
 }: {
   target: RefObject<HTMLVideoElement>
   ready: boolean
+  onError?: (msg: string | null) => void
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -13,6 +15,12 @@ export function AsciiLayer({
     const canvas = canvasRef.current
     const video = target.current
     if (!canvas || !video || !ready) return
+
+    if (!('transferControlToOffscreen' in canvas) ||
+        typeof OffscreenCanvas === 'undefined') {
+      onError?.('OffscreenCanvas not supported')
+      return
+    }
 
     canvas.width = video.clientWidth
     canvas.height = video.clientHeight
@@ -22,7 +30,14 @@ export function AsciiLayer({
       new URL('../workers/asciiWorker.ts', import.meta.url),
       { type: 'module' }
     )
+    const handleWorker = (e: MessageEvent) => {
+      if (e.data?.error && typeof e.data.error === 'string') {
+        onError?.(e.data.error)
+      }
+    }
+    worker.addEventListener('message', handleWorker)
     worker.postMessage({ canvas: offscreen }, [offscreen])
+    onError?.(null)
 
     let raf: number
     async function loop() {
@@ -35,6 +50,7 @@ export function AsciiLayer({
     raf = requestAnimationFrame(loop)
     return () => {
       cancelAnimationFrame(raf)
+      worker.removeEventListener('message', handleWorker)
       worker.terminate()
       if (canvas.parentNode) {
         const clone = canvas.cloneNode(false) as HTMLCanvasElement
