@@ -1,6 +1,8 @@
 import asciiFrag from '../shaders/ascii.frag?raw'
 
 let gl: WebGL2RenderingContext | null = null
+let glCanvas: OffscreenCanvas | null = null
+let displayCtx: OffscreenCanvasRenderingContext2D | null = null
 let program: WebGLProgram | null = null
 let vao: WebGLVertexArrayObject | null = null
 let frameTex: WebGLTexture | null = null
@@ -8,12 +10,18 @@ let glyphTex: WebGLTexture | null = null
 let uFrameLoc: WebGLUniformLocation | null = null
 let uGlyphsLoc: WebGLUniformLocation | null = null
 let uThresholdLoc: WebGLUniformLocation | null = null
+let uCellCountLoc: WebGLUniformLocation | null = null
 
 const THRESHOLD = 0.33
+const CELL_W = 6
+const CELL_H = 8
 
 self.onmessage = ({ data }) => {
   if (data.canvas) {
-    gl = (data.canvas as OffscreenCanvas).getContext('webgl2')
+    const canvas = data.canvas as OffscreenCanvas
+    displayCtx = canvas.getContext('2d')
+    glCanvas = new OffscreenCanvas(canvas.width, canvas.height)
+    gl = glCanvas.getContext('webgl2')
     if (gl) init(gl)
     return
   }
@@ -88,10 +96,32 @@ function init(gl: WebGL2RenderingContext) {
   uFrameLoc = gl.getUniformLocation(program, 'uFrame')
   uGlyphsLoc = gl.getUniformLocation(program, 'uGlyphs')
   uThresholdLoc = gl.getUniformLocation(program, 'uThreshold')
+  uCellCountLoc = gl.getUniformLocation(program, 'uCellCount')
+  const cellX = gl.canvas.width / CELL_W
+  const cellY = gl.canvas.height / CELL_H
+  gl.useProgram(program)
+  gl.uniform2f(uCellCountLoc, cellX, cellY)
 }
 
 function createGlyphTexture(gl: WebGL2RenderingContext) {
-  const chars = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@', 'A', 'B', 'C', 'D', 'E', 'F']
+  const chars = [
+    '$',
+    '#',
+    'W',
+    'M',
+    'N',
+    '8',
+    'H',
+    'A',
+    'E',
+    '6',
+    '9',
+    'C',
+    'F',
+    'Y',
+    '+',
+    '?'
+  ]
   const size = 256
   const cell = size / 4
   const canvas = new OffscreenCanvas(size, size)
@@ -100,7 +130,7 @@ function createGlyphTexture(gl: WebGL2RenderingContext) {
   ctx.fillStyle = '#fff'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.font = `${cell * 0.8}px monospace`
+  ctx.font = '700 10px/8px "SF Mono", "IBM Plex Mono", monospace'
 
   for (let i = 0; i < chars.length; i++) {
     const x = (i % 4) * cell + cell / 2
@@ -120,7 +150,9 @@ function createGlyphTexture(gl: WebGL2RenderingContext) {
 }
 
 function render(gl: WebGL2RenderingContext, frame: ImageBitmap) {
-  gl.viewport(0, 0, (gl.canvas as OffscreenCanvas).width, (gl.canvas as OffscreenCanvas).height)
+  if (glCanvas) {
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height)
+  }
   gl.useProgram(program)
   gl.bindVertexArray(vao)
 
@@ -136,5 +168,10 @@ function render(gl: WebGL2RenderingContext, frame: ImageBitmap) {
   gl.uniform1f(uThresholdLoc, THRESHOLD)
 
   gl.drawArrays(gl.TRIANGLES, 0, 6)
+  gl.flush()
+  if (displayCtx && glCanvas) {
+    displayCtx.clearRect(0, 0, glCanvas.width, glCanvas.height)
+    displayCtx.drawImage(glCanvas, 0, 0)
+  }
   frame.close()
 }

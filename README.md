@@ -51,3 +51,4 @@ A GitHub Action in `.github/workflows/deploy.yml` builds the project when you pu
 
 ## Notes
 - The ASCII worker implements a simple shader pipeline for real-time rendering.
+- The shader now renders with a neon palette and a tighter 6x8 grid using a cryptic character set.
