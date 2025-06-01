@@ -43,7 +43,7 @@ export function HeroMontage() {
   }
 
   const { data, error } = useSWR<VideoData>(
-    `https://api.vimeo.com/videos/${VIMEO_ID}`,
+    `https://api.vimeo.com/videos/${VIMEO_ID}?fields=files`,
     fetcher,
     {
       onError: err => console.error('Vimeo fetch error:', err),

@@ -24,7 +24,9 @@ export default async function handler(req: NextRequest) {
   if (cached) return Response.json(cached, { headers: { 'x-cache': 'HIT' } })
 
   try {
-    const res = await fetch(`https://api.vimeo.com/videos/${id}`, {
+    const url = `https://api.vimeo.com/videos/${id}?fields=files`
+    console.log('Fetching', url)
+    const res = await fetch(url, {
       headers: { Authorization: `bearer ${VIMEO}` }
     })
     if (!res.ok) {
