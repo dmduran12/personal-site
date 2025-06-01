@@ -17,5 +17,5 @@ void main() {
   vec2 cell = vec2(mod(float(index), 4.0), floor(float(index) / 4.0)) / 4.0;
   vec2 glyphUV = fract(v_uv * 64.0) / 4.0 + cell;
   vec4 glyph = texture2D(uGlyphs, glyphUV);
-  gl_FragColor = vec4(vec3(0.2, 0.2, 0.21), glyph.a);
+  gl_FragColor = vec4(vec3(1.0), glyph.a);
 }
