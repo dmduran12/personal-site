@@ -12,8 +12,8 @@ let uPrevLoc: WebGLUniformLocation | null = null
 let uFadeLoc: WebGLUniformLocation | null = null
 let uThresholdLoc: WebGLUniformLocation | null = null
 
-const THRESHOLD = 0.8
-const FADE = Math.exp(-1 / (0.5 * 60))
+const THRESHOLD = 0.33
+const FADE = Math.exp(-1 / (0.25 * 60))
 
 self.onmessage = ({ data }) => {
   if (data.canvas) {
@@ -120,8 +120,7 @@ function createGlyphTexture(gl: WebGL2RenderingContext) {
   const cell = size / 4
   const canvas = new OffscreenCanvas(size, size)
   const ctx = canvas.getContext('2d')!
-  ctx.fillStyle = '#000'
-  ctx.fillRect(0, 0, size, size)
+  ctx.clearRect(0, 0, size, size)
   ctx.fillStyle = '#fff'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
