@@ -23,7 +23,9 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    EOF
    ```
 
-   A blank screen usually means these variables weren't configured correctly.
+   A blank screen usually means the environment variables weren't configured
+   correctly or the Vimeo request was blocked. Double-check your token and video
+   ID.
 2. Install dependencies:
    ```bash
    corepack pnpm install
