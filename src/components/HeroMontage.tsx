@@ -4,10 +4,14 @@ import { AsciiLayer } from './AsciiLayer'
 
 type VideoData = { src: string; width: number; height: number }
 
-const API_BASE = import.meta.env.VITE_API_BASE || ''
+const TOKEN = import.meta.env.VITE_VIMEO_TOKEN
 
 const fetcher = async (url: string) => {
-  const res = await fetch(url)
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `bearer ${TOKEN}`
+    }
+  })
   const type = res.headers.get('content-type') || ''
   const isJson = type.includes('application/json') || type.includes('+json')
   if (!res.ok || !isJson) {
@@ -17,14 +21,21 @@ const fetcher = async (url: string) => {
       : `Unexpected content-type ${type}`
     throw new Error(message)
   }
-  return res.json()
+  const json = await res.json()
+  const mp4 = (json.files as any[])
+    .filter(f => f.type === 'video/mp4')
+    .sort((a, b) => b.width - a.width)[0]
+  if (!mp4) {
+    throw new Error('No MP4 file found in Vimeo response')
+  }
+  return { src: mp4.link, width: mp4.width, height: mp4.height }
 }
 
 const VIMEO_ID = import.meta.env.VITE_VIMEO_VIDEO_ID
 
 export function HeroMontage() {
   const { data, error } = useSWR<VideoData>(
-    `${API_BASE}/api/vimeo-file?id=${VIMEO_ID}`,
+    `https://api.vimeo.com/videos/${VIMEO_ID}`,
     fetcher,
     {
       onError: err => console.error('Vimeo fetch error:', err),
