@@ -34,6 +34,14 @@ const fetcher = async (url: string) => {
 const VIMEO_ID = import.meta.env.VITE_VIMEO_VIDEO_ID
 
 export function HeroMontage() {
+  if (!TOKEN || !VIMEO_ID) {
+    return (
+      <div className="p-4 text-red-500">
+        Missing VITE_VIMEO_TOKEN or VITE_VIMEO_VIDEO_ID. See README for setup.
+      </div>
+    )
+  }
+
   const { data, error } = useSWR<VideoData>(
     `https://api.vimeo.com/videos/${VIMEO_ID}`,
     fetcher,
@@ -85,7 +93,7 @@ export function HeroMontage() {
         crossOrigin="anonymous"
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
-      <AsciiLayer target={videoRef} />
+      <AsciiLayer target={videoRef} ready={!!data} />
     </section>
   )
 }

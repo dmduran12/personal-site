@@ -22,6 +22,8 @@ This repo contains a React/Vite project that plays a Vimeo video and renders it 
    VITE_VIMEO_VIDEO_ID=<your-video-id>
    EOF
    ```
+
+   A blank screen usually means these variables weren't configured correctly.
 2. Install dependencies:
    ```bash
    corepack pnpm install
