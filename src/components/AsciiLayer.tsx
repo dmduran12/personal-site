@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useRef } from 'react'
 function startFallback(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
-  canvas.width = video.clientWidth
-  canvas.height = video.clientHeight
+  canvas.width = video.videoWidth || video.clientWidth
+  canvas.height = video.videoHeight || video.clientHeight
   const ctx = canvas.getContext('2d')!
   const ascii = '$#WMN8HAE69CFY+?'
   const cellW = 6
@@ -50,43 +50,60 @@ export function AsciiLayer({
     const video = target.current
     if (!canvas || !video || !ready) return
 
-    if (!("transferControlToOffscreen" in canvas) ||
-        typeof OffscreenCanvas === "undefined" ||
-        !("WebGL2RenderingContext" in window)) {
-      onError?.(null)
-      return startFallback(canvas, video)
-    }
+    let cleanup: (() => void) | undefined
 
-    canvas.width = video.clientWidth
-    canvas.height = video.clientHeight
+    const start = () => {
+      canvas.width = video.videoWidth || video.clientWidth
+      canvas.height = video.videoHeight || video.clientHeight
 
-    const offscreen = canvas.transferControlToOffscreen()
-    const worker = new Worker(
-      new URL('../workers/asciiWorker.ts', import.meta.url),
-      { type: 'module' }
-    )
-    const handleWorker = (e: MessageEvent) => {
-      if (e.data?.error && typeof e.data.error === 'string') {
-        onError?.(e.data.error)
+      if (!('transferControlToOffscreen' in canvas) ||
+          typeof OffscreenCanvas === 'undefined' ||
+          !('WebGL2RenderingContext' in window)) {
+        onError?.(null)
+        cleanup = startFallback(canvas, video)
+        return
       }
-    }
-    worker.addEventListener('message', handleWorker)
-    worker.postMessage({ canvas: offscreen }, [offscreen])
-    onError?.(null)
 
-    let raf: number
-    async function loop() {
-      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-        const frame = await createImageBitmap(video)
-        worker.postMessage({ frame }, [frame])
+      const offscreen = canvas.transferControlToOffscreen()
+      const worker = new Worker(
+        new URL('../workers/asciiWorker.ts', import.meta.url),
+        { type: 'module' }
+      )
+      const handleWorker = (e: MessageEvent) => {
+        if (e.data?.error && typeof e.data.error === 'string') {
+          onError?.(e.data.error)
+        }
+      }
+      worker.addEventListener('message', handleWorker)
+      worker.postMessage({ canvas: offscreen }, [offscreen])
+      onError?.(null)
+
+      let raf: number
+      async function loop() {
+        if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+          const frame = await createImageBitmap(video)
+          worker.postMessage({ frame }, [frame])
+        }
+        raf = requestAnimationFrame(loop)
       }
       raf = requestAnimationFrame(loop)
+
+      cleanup = () => {
+        cancelAnimationFrame(raf)
+        worker.removeEventListener('message', handleWorker)
+        worker.terminate()
+      }
     }
-    raf = requestAnimationFrame(loop)
+
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      start()
+    } else {
+      video.addEventListener('loadeddata', start, { once: true })
+    }
+
     return () => {
-      cancelAnimationFrame(raf)
-      worker.removeEventListener('message', handleWorker)
-      worker.terminate()
+      video.removeEventListener('loadeddata', start)
+      cleanup?.()
       if (canvas.parentNode) {
         const clone = canvas.cloneNode(false) as HTMLCanvasElement
         clone.className = canvas.className
