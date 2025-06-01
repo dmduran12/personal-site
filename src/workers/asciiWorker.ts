@@ -9,10 +9,8 @@ let frameTex: WebGLTexture | null = null
 let glyphTex: WebGLTexture | null = null
 let uFrameLoc: WebGLUniformLocation | null = null
 let uGlyphsLoc: WebGLUniformLocation | null = null
-let uThresholdLoc: WebGLUniformLocation | null = null
 let uCellCountLoc: WebGLUniformLocation | null = null
 
-const THRESHOLD = 0.33
 const CELL_W = 6
 const CELL_H = 8
 
@@ -95,7 +93,6 @@ function init(gl: WebGL2RenderingContext) {
 
   uFrameLoc = gl.getUniformLocation(program, 'uFrame')
   uGlyphsLoc = gl.getUniformLocation(program, 'uGlyphs')
-  uThresholdLoc = gl.getUniformLocation(program, 'uThreshold')
   uCellCountLoc = gl.getUniformLocation(program, 'uCellCount')
   const cellX = gl.canvas.width / CELL_W
   const cellY = gl.canvas.height / CELL_H
@@ -164,8 +161,6 @@ function render(gl: WebGL2RenderingContext, frame: ImageBitmap) {
   gl.activeTexture(gl.TEXTURE1)
   gl.bindTexture(gl.TEXTURE_2D, glyphTex)
   gl.uniform1i(uGlyphsLoc, 1)
-
-  gl.uniform1f(uThresholdLoc, THRESHOLD)
 
   gl.drawArrays(gl.TRIANGLES, 0, 6)
   gl.flush()

@@ -83,7 +83,7 @@ export function HeroMontage() {
         loop
         playsInline
         crossOrigin="anonymous"
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
       <AsciiLayer target={videoRef} />
     </section>
