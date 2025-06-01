@@ -39,5 +39,10 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
     }
   }, [target])
 
-  return <canvas ref={canvasRef} className="absolute inset-0 h-full w-full pointer-events-none" />
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+    />
+  )
 }
