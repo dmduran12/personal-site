@@ -85,7 +85,7 @@ export function HeroMontage() {
         crossOrigin="anonymous"
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
-      <AsciiLayer target={videoRef} />
+      <AsciiLayer target={videoRef} ready={!!data} />
     </section>
   )
 }

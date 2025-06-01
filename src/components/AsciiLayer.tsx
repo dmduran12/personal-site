@@ -1,12 +1,18 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) {
+export function AsciiLayer({
+  target,
+  ready
+}: {
+  target: RefObject<HTMLVideoElement>
+  ready: boolean
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
     const video = target.current
-    if (!canvas || !video) return
+    if (!canvas || !video || !ready) return
 
     canvas.width = video.clientWidth
     canvas.height = video.clientHeight
@@ -37,7 +43,7 @@ export function AsciiLayer({ target }: { target: RefObject<HTMLVideoElement> }) 
         canvasRef.current = clone
       }
     }
-  }, [target])
+  }, [target, ready])
 
   return (
     <canvas
