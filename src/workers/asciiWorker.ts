@@ -7,6 +7,13 @@ let frameTex: WebGLTexture | null = null
 let glyphTex: WebGLTexture | null = null
 let uFrameLoc: WebGLUniformLocation | null = null
 let uGlyphsLoc: WebGLUniformLocation | null = null
+let prevTex: WebGLTexture | null = null
+let uPrevLoc: WebGLUniformLocation | null = null
+let uFadeLoc: WebGLUniformLocation | null = null
+let uThresholdLoc: WebGLUniformLocation | null = null
+
+const THRESHOLD = 0.8
+const FADE = Math.exp(-1 / (0.5 * 60))
 
 self.onmessage = ({ data }) => {
   if (data.canvas) {
@@ -82,8 +89,29 @@ function init(gl: WebGL2RenderingContext) {
 
   glyphTex = createGlyphTexture(gl)
 
+  prevTex = gl.createTexture()!
+  gl.bindTexture(gl.TEXTURE_2D, prevTex)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    (gl.canvas as OffscreenCanvas).width,
+    (gl.canvas as OffscreenCanvas).height,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    null
+  )
+
   uFrameLoc = gl.getUniformLocation(program, 'uFrame')
   uGlyphsLoc = gl.getUniformLocation(program, 'uGlyphs')
+  uPrevLoc = gl.getUniformLocation(program, 'uPrev')
+  uFadeLoc = gl.getUniformLocation(program, 'uFade')
+  uThresholdLoc = gl.getUniformLocation(program, 'uThreshold')
 }
 
 function createGlyphTexture(gl: WebGL2RenderingContext) {
@@ -130,6 +158,23 @@ function render(gl: WebGL2RenderingContext, frame: ImageBitmap) {
   gl.bindTexture(gl.TEXTURE_2D, glyphTex)
   gl.uniform1i(uGlyphsLoc, 1)
 
+  gl.activeTexture(gl.TEXTURE2)
+  gl.bindTexture(gl.TEXTURE_2D, prevTex)
+  gl.uniform1i(uPrevLoc, 2)
+  gl.uniform1f(uFadeLoc, FADE)
+  gl.uniform1f(uThresholdLoc, THRESHOLD)
+
   gl.drawArrays(gl.TRIANGLES, 0, 6)
+  gl.bindTexture(gl.TEXTURE_2D, prevTex)
+  gl.copyTexImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    0,
+    0,
+    (gl.canvas as OffscreenCanvas).width,
+    (gl.canvas as OffscreenCanvas).height,
+    0
+  )
   frame.close()
 }
