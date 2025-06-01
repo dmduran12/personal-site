@@ -56,3 +56,22 @@ A GitHub Action in `.github/workflows/deploy.yml` builds the project when you pu
 ## Notes
 - The ASCII worker implements a simple shader pipeline for real-time rendering.
 - The shader now renders with a neon palette and a tighter 6x8 grid using a cryptic character set.
+
+## Troubleshooting
+
+### `node_modules/.ignored` warnings
+
+If you installed packages with another package manager (like `npm` or `yarn`),
+`pnpm` will warn about moving those modules to `node_modules/.ignored`. Remove
+the existing `node_modules` folder and any `package-lock.json` or `yarn.lock`
+files, then reinstall:
+
+```bash
+rm -rf node_modules package-lock.json yarn.lock
+corepack pnpm install
+```
+
+### Video loads but ASCII output is missing
+
+Ensure your browser supports `OffscreenCanvas` and `WebGL2`. If not, the worker
+will fail to initialize and the video will play without the ASCII effect.
