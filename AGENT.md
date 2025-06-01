@@ -28,6 +28,7 @@ There are currently no automated tests. Add `vitest` and `playwright` when ready
 - Implemented WebGL shader logic in `asciiWorker.ts`.
 - Installed SWR and added in-memory caching for Vimeo API.
 - Defined PNPM version for CI build.
+- Added Canvas 2D fallback for browsers without OffscreenCanvas or WebGL2.
 
 ## API Usage
 Always fetch Vimeo data directly using:
