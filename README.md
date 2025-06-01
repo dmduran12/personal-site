@@ -73,5 +73,4 @@ corepack pnpm install
 
 ### Video loads but ASCII output is missing
 
-Ensure your browser supports `OffscreenCanvas` and `WebGL2`. If not, the worker
-will fail to initialize and the video will play without the ASCII effect.
+If `OffscreenCanvas` or `WebGL2` aren't available, the app automatically falls back to a slower Canvas 2D renderer. Ensure cross-origin video playback is allowed.
