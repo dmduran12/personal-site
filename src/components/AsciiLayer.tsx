@@ -44,8 +44,9 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   let raf: number
 
   const lines = ['DANNY', 'DURAN']
-  // previous overlay scale was 8, go down one step to 6
-  const scale = 6
+  // tighten spacing around the overlay text
+  const charScale = 5.6
+  const lineScale = 5
   let bounds: { x: number; y: number; w: number; h: number } | null = null
 
   const draw = () => {
@@ -55,8 +56,8 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
     const rows = Math.floor(canvas.height / cellH)
 
     if (!bounds) {
-      const textCols = Math.max(...lines.map(l => l.length)) * scale
-      const textRows = lines.length * scale
+      const textCols = Math.max(...lines.map(l => l.length)) * charScale
+      const textRows = lines.length * lineScale
       const startCol = Math.floor((cols - textCols) / 2)
       const startRow = Math.floor((rows - textRows) / 2)
       bounds = { x: startCol, y: startRow, w: textCols, h: textRows }
@@ -99,14 +100,14 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
     }
 
     // draw the static overlay text
-    const overlayFont = `800 ${24 * scale}px/${16 * scale}px "Micro 5", sans-serif`
+    const overlayFont = `800 ${24 * charScale}px/${16 * lineScale}px "Micro 5", sans-serif`
     ctx.fillStyle = '#ffffff'
     ctx.font = overlayFont
     lines.forEach((line, rowIndex) => {
       for (let iChar = 0; iChar < line.length; iChar++) {
         const ch = line[iChar]
-        const xPos = (bounds!.x + iChar * scale + scale / 2) * cellW
-        const yPos = (bounds!.y + rowIndex * scale + scale / 2) * cellH
+        const xPos = (bounds!.x + iChar * charScale + charScale / 2) * cellW
+        const yPos = (bounds!.y + rowIndex * lineScale + lineScale / 2) * cellH
         ctx.fillText(ch, xPos, yPos)
       }
     })
