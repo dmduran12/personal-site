@@ -44,6 +44,8 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   let raf: number
 
   const draw = () => {
+    // ensure base font for ASCII grid
+    ctx.font = '400 32px/16px "Micro 5", sans-serif'
     const cols = Math.floor(canvas.width / cellW)
     const rows = Math.floor(canvas.height / cellH)
     ctx.drawImage(video, 0, 0, cols, rows)
@@ -74,6 +76,28 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
         i += 4
       }
     }
+
+    // draw static overlay text at 8x scale
+    const lines = ['DANNY', 'DURAN']
+    const scale = 8
+    const overlayFont = `800 ${32 * scale}px/${16 * scale}px "Micro 5", sans-serif`
+    ctx.fillStyle = '#ffffff'
+    ctx.font = overlayFont
+    const textCols = Math.max(...lines.map(l => l.length)) * scale
+    const textRows = lines.length * scale
+    const startCol = Math.floor((cols - textCols) / 2)
+    const startRow = Math.floor((rows - textRows) / 2)
+    lines.forEach((line, rowIndex) => {
+      for (let iChar = 0; iChar < line.length; iChar++) {
+        const ch = line[iChar]
+        const x = (startCol + iChar * scale + scale / 2) * cellW
+        const y = (startRow + rowIndex * scale + scale / 2) * cellH
+        ctx.fillText(ch, x, y)
+      }
+    })
+
+    // reset font for next frame
+    ctx.font = '400 32px/16px "Micro 5", sans-serif'
 
     raf = requestAnimationFrame(draw)
   }
