@@ -33,9 +33,11 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   const ctx = canvas.getContext('2d')!
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const charCount = alphabet.length
-  const cellW = 24
-  const cellH = 32
-  ctx.font = '400 40px/32px "Micro 5", sans-serif'
+  // tighten grid size by 50%
+  const cellW = 12
+  const cellH = 16
+  // shrink font size by 20% while keeping line height equal to the cell height
+  ctx.font = '400 32px/16px "Micro 5", sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   let raf: number
