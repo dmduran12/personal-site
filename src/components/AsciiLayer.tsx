@@ -43,11 +43,25 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   ctx.textBaseline = 'middle'
   let raf: number
 
+  const lines = ['DANNY', 'DURAN']
+  // previous overlay scale was 8, go down one step to 6
+  const scale = 6
+  let bounds: { x: number; y: number; w: number; h: number } | null = null
+
   const draw = () => {
     // ensure base font for ASCII grid
     ctx.font = '400 24px/16px "Micro 5", sans-serif'
     const cols = Math.floor(canvas.width / cellW)
     const rows = Math.floor(canvas.height / cellH)
+
+    if (!bounds) {
+      const textCols = Math.max(...lines.map(l => l.length)) * scale
+      const textRows = lines.length * scale
+      const startCol = Math.floor((cols - textCols) / 2)
+      const startRow = Math.floor((rows - textRows) / 2)
+      bounds = { x: startCol, y: startRow, w: textCols, h: textRows }
+    }
+
     ctx.drawImage(video, 0, 0, cols, rows)
     const data = ctx.getImageData(0, 0, cols, rows).data
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -64,7 +78,14 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
         const lumNorm = lum / 255
         const lumPct = Math.round(lumNorm * 100)
         ctx.fillStyle = `hsl(${hue} ${satPct}% ${lumPct}%)`
-        if (lumNorm > 0.95) {
+        if (
+          x >= bounds.x &&
+          x < bounds.x + bounds.w &&
+          y >= bounds.y &&
+          y < bounds.y + bounds.h
+        ) {
+          // skip cells under the overlay text
+        } else if (lumNorm > 0.95) {
           ctx.fillText('+', x * cellW + cellW / 2, y * cellH + cellH / 2)
         } else if (lumNorm < 0.1) {
           const idx = Math.floor((lumNorm / 0.1) * (shadows.length - 1))
@@ -76,6 +97,19 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
         i += 4
       }
     }
+
+    // draw the static overlay text
+    const overlayFont = `800 ${24 * scale}px/${16 * scale}px "Micro 5", sans-serif`
+    ctx.fillStyle = '#ffffff'
+    ctx.font = overlayFont
+    lines.forEach((line, rowIndex) => {
+      for (let iChar = 0; iChar < line.length; iChar++) {
+        const ch = line[iChar]
+        const xPos = (bounds!.x + iChar * scale + scale / 2) * cellW
+        const yPos = (bounds!.y + rowIndex * scale + scale / 2) * cellH
+        ctx.fillText(ch, xPos, yPos)
+      }
+    })
 
 
     // reset font for next frame
