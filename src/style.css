@@ -7,3 +7,32 @@
   font-weight: 400;
   font-style: normal;
 }
+
+@layer utilities {
+  .hsl0   { color: hsl(0 90% 50%); }
+  .hsl14  { color: hsl(14 90% 50%); }
+  .hsl28  { color: hsl(28 90% 50%); }
+  .hsl42  { color: hsl(42 90% 50%); }
+  .hsl56  { color: hsl(56 90% 50%); }
+  .hsl70  { color: hsl(70 90% 50%); }
+  .hsl84  { color: hsl(84 90% 50%); }
+  .hsl98  { color: hsl(98 90% 50%); }
+  .hsl112 { color: hsl(112 90% 50%); }
+  .hsl126 { color: hsl(126 90% 50%); }
+  .hsl140 { color: hsl(140 90% 50%); }
+  .hsl154 { color: hsl(154 90% 50%); }
+  .hsl168 { color: hsl(168 90% 50%); }
+  .hsl182 { color: hsl(182 90% 50%); }
+  .hsl196 { color: hsl(196 90% 50%); }
+  .hsl210 { color: hsl(210 90% 50%); }
+  .hsl224 { color: hsl(224 90% 50%); }
+  .hsl238 { color: hsl(238 90% 50%); }
+  .hsl252 { color: hsl(252 90% 50%); }
+  .hsl266 { color: hsl(266 90% 50%); }
+  .hsl280 { color: hsl(280 90% 50%); }
+  .hsl294 { color: hsl(294 90% 50%); }
+  .hsl308 { color: hsl(308 90% 50%); }
+  .hsl322 { color: hsl(322 90% 50%); }
+  .hsl336 { color: hsl(336 90% 50%); }
+  .hsl350 { color: hsl(350 90% 50%); }
+}
