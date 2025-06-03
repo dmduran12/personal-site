@@ -7,7 +7,7 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   const chars = ' .:-=+*#%@'
   const cellW = 6
   const cellH = 8
-  ctx.font = '600 10px/8px "SF Mono", "IBM Plex Mono", monospace'
+  ctx.font = '400 10px/8px "Micro 5", sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   let raf: number
