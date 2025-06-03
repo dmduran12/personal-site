@@ -33,6 +33,7 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   const ctx = canvas.getContext('2d')!
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const charCount = alphabet.length
+  const shadows = ' .:-=+*#%@'
   // tighten grid size by 50%
   const cellW = 12
   const cellH = 16
@@ -58,12 +59,16 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
         const lum = r * 0.2126 + g * 0.7152 + b * 0.0722
         const [hue, sat] = rgbToHsl(r, g, b)
         const satPct = Math.round(sat * 100)
-        if (lum > 0.95 * 255) {
-          ctx.fillStyle = `hsl(${hue} ${satPct}% 55%)`
+        const lumNorm = lum / 255
+        const lumPct = Math.round(lumNorm * 100)
+        ctx.fillStyle = `hsl(${hue} ${satPct}% ${lumPct}%)`
+        if (lumNorm > 0.95) {
           ctx.fillText('+', x * cellW + cellW / 2, y * cellH + cellH / 2)
+        } else if (lumNorm < 0.1) {
+          const idx = Math.floor((lumNorm / 0.1) * (shadows.length - 1))
+          ctx.fillText(shadows[idx], x * cellW + cellW / 2, y * cellH + cellH / 2)
         } else {
           const idx = Math.floor((hue / 360) * charCount)
-          ctx.fillStyle = `hsl(${hue} ${satPct}% 50%)`
           ctx.fillText(alphabet[idx], x * cellW + cellW / 2, y * cellH + cellH / 2)
         }
         i += 4
