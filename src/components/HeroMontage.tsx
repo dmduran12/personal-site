@@ -64,7 +64,6 @@ export function HeroMontage() {
       setVideoError('Failed to play video')
     }
     const handleLoaded = () => {
-      console.log('Video loaded')
       setVideoError(null)
     }
     video.addEventListener('error', handleError)
