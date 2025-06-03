@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, MutableRefObject } from 'react'
 import useSWR from 'swr'
 import { AsciiLayer } from './AsciiLayer'
 
@@ -33,7 +33,11 @@ const fetcher = async (url: string) => {
 
 const VIMEO_ID = import.meta.env.VITE_VIMEO_VIDEO_ID
 
-export function HeroMontage() {
+export function HeroMontage({
+  cellSizeRef
+}: {
+  cellSizeRef: MutableRefObject<{ w: number; h: number }>
+}) {
   if (!TOKEN || !VIMEO_ID) {
     return (
       <div className="p-4 text-red-500">
@@ -94,7 +98,12 @@ export function HeroMontage() {
         crossOrigin="anonymous"
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
-      <AsciiLayer target={videoRef} ready={!!data} onError={setAsciiError} />
+      <AsciiLayer
+        target={videoRef}
+        ready={!!data}
+        sizeRef={cellSizeRef}
+        onError={setAsciiError}
+      />
     </section>
   )
 }

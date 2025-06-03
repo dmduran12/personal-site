@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef, MutableRefObject } from 'react'
 
 function rgbToHsl(r: number, g: number, b: number) {
   const rr = r / 255
@@ -27,16 +27,19 @@ function rgbToHsl(r: number, g: number, b: number) {
   return [h * 360, s, l]
 }
 
-function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
+function startAscii(
+  canvas: HTMLCanvasElement,
+  video: HTMLVideoElement,
+  sizeRef: MutableRefObject<{ w: number; h: number }>
+) {
   canvas.width = video.videoWidth || video.clientWidth
   canvas.height = video.videoHeight || video.clientHeight
   const ctx = canvas.getContext('2d')!
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const charCount = alphabet.length
   const shadows = ' .:-=+*#%@'
-  // decrease grid spacing by 50%
-  const cellW = 6
-  const cellH = 8
+  let prevW = sizeRef.current.w
+  let prevH = sizeRef.current.h
   // base font for ASCII grid - one step down the type scale
   ctx.font = '400 24px/16px "Micro 5", sans-serif'
   ctx.textAlign = 'center'
@@ -50,6 +53,12 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   let bounds: { x: number; y: number; w: number; h: number } | null = null
 
   const draw = () => {
+    const { w: cellW, h: cellH } = sizeRef.current
+    if (cellW !== prevW || cellH !== prevH) {
+      bounds = null
+      prevW = cellW
+      prevH = cellH
+    }
     // ensure base font for ASCII grid
     ctx.font = '400 24px/16px "Micro 5", sans-serif'
     const cols = Math.floor(canvas.width / cellW)
@@ -126,10 +135,12 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
 export function AsciiLayer({
   target,
   ready,
+  sizeRef,
   onError
 }: {
   target: RefObject<HTMLVideoElement>
   ready: boolean
+  sizeRef: MutableRefObject<{ w: number; h: number }>
   onError?: (msg: string | null) => void
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -142,7 +153,7 @@ export function AsciiLayer({
     let cleanup: (() => void) | undefined
 
     const start = () => {
-      cleanup = startAscii(canvas, video)
+      cleanup = startAscii(canvas, video, sizeRef)
       onError?.(null)
     }
 
@@ -156,7 +167,7 @@ export function AsciiLayer({
       video.removeEventListener('loadeddata', start)
       cleanup?.()
     }
-  }, [target, ready])
+  }, [target, ready, sizeRef])
 
   return (
     <canvas
