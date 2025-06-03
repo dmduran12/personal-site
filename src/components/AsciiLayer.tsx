@@ -34,9 +34,9 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const charCount = alphabet.length
   const shadows = ' .:-=+*#%@'
-  // tighten grid size by 50%
-  const cellW = 12
-  const cellH = 16
+  // decrease grid spacing by 50%
+  const cellW = 6
+  const cellH = 8
   // base font for ASCII grid - one step down the type scale
   ctx.font = '400 24px/16px "Micro 5", sans-serif'
   ctx.textAlign = 'center'
