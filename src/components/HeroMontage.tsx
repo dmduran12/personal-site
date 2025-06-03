@@ -84,17 +84,56 @@ export function HeroMontage() {
 
   return (
     <section className="fixed inset-0 overflow-hidden">
-      <video
-        ref={videoRef}
-        src={data?.src}
-        autoPlay
-        muted
-        loop
-        playsInline
-        crossOrigin="anonymous"
-        className="absolute inset-0 h-full w-full object-cover opacity-0"
-      />
-      <AsciiLayer target={videoRef} ready={!!data} onError={setAsciiError} />
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        <defs>
+          <mask id="name-mask" x="0" y="0" width="100%" height="100%">
+            <rect width="100%" height="100%" fill="white" />
+            <text
+              x="33.333%"
+              y="40%"
+              text-anchor="start"
+              fill="black"
+              font-family="'Micro 5', sans-serif"
+              font-weight="800"
+              font-size="20vw"
+            >
+              DANNY
+            </text>
+            <text
+              x="33.333%"
+              y="80%"
+              text-anchor="start"
+              fill="black"
+              font-family="'Micro 5', sans-serif"
+              font-weight="800"
+              font-size="20vw"
+            >
+              DURAN
+            </text>
+          </mask>
+        </defs>
+      </svg>
+      <div
+        className="absolute inset-0"
+        style={{ mask: 'url(#name-mask)', WebkitMask: 'url(#name-mask)' }}
+      >
+        <video
+          ref={videoRef}
+          src={data?.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          crossOrigin="anonymous"
+          className="absolute inset-0 h-full w-full object-cover opacity-0"
+        />
+        <AsciiLayer target={videoRef} ready={!!data} onError={setAsciiError} />
+      </div>
+      <div className="absolute inset-0 pointer-events-none flex items-start pl-[33.333%]">
+        <h1 className="font-micro5 font-extrabold leading-none text-[20vw] text-white text-left">
+          DANNY<br />DURAN
+        </h1>
+      </div>
     </section>
   )
 }
