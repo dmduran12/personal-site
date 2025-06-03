@@ -54,7 +54,6 @@ export function HeroMontage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoError, setVideoError] = useState<string | null>(null)
   const [asciiError, setAsciiError] = useState<string | null>(null)
-  const [status, setStatus] = useState('Fetching Vimeo video...')
 
   useEffect(() => {
     const video = videoRef.current
@@ -74,12 +73,6 @@ export function HeroMontage() {
     }
   }, [data])
 
-  useEffect(() => {
-    if (data) {
-      console.log('Fetched Vimeo video data', data)
-      setStatus('Vimeo video loaded')
-    }
-  }, [data])
 
   if (error || videoError || asciiError) {
     return (
@@ -102,9 +95,6 @@ export function HeroMontage() {
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
       <AsciiLayer target={videoRef} ready={!!data} onError={setAsciiError} />
-      <div className="pointer-events-none absolute top-2 left-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
-        {status}
-      </div>
     </section>
   )
 }
