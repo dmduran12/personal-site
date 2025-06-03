@@ -1,19 +1,30 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-function rgbToHue(r: number, g: number, b: number) {
+function rgbToHsl(r: number, g: number, b: number) {
   const rr = r / 255
   const gg = g / 255
   const bb = b / 255
   const max = Math.max(rr, gg, bb)
   const min = Math.min(rr, gg, bb)
-  if (max === min) return 0
   let h = 0
-  if (max === rr) h = (gg - bb) / (max - min)
-  else if (max === gg) h = 2 + (bb - rr) / (max - min)
-  else h = 4 + (rr - gg) / (max - min)
-  h *= 60
-  if (h < 0) h += 360
-  return h
+  let s = 0
+  const l = (max + min) / 2
+  if (max !== min) {
+    const d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    switch (max) {
+      case rr:
+        h = (gg - bb) / d + (gg < bb ? 6 : 0)
+        break
+      case gg:
+        h = (bb - rr) / d + 2
+        break
+      default:
+        h = (rr - gg) / d + 4
+    }
+    h /= 6
+  }
+  return [h * 360, s, l]
 }
 
 function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
@@ -22,9 +33,9 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
   const ctx = canvas.getContext('2d')!
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const charCount = alphabet.length
-  const cellW = 6
-  const cellH = 8
-  ctx.font = '400 10px/8px "Micro 5", sans-serif'
+  const cellW = 24
+  const cellH = 32
+  ctx.font = '400 40px/32px "Micro 5", sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   let raf: number
@@ -43,13 +54,14 @@ function startAscii(canvas: HTMLCanvasElement, video: HTMLVideoElement) {
         const g = data[i + 1]
         const b = data[i + 2]
         const lum = r * 0.2126 + g * 0.7152 + b * 0.0722
-        const hue = rgbToHue(r, g, b)
+        const [hue, sat] = rgbToHsl(r, g, b)
+        const satPct = Math.round(sat * 100)
         if (lum > 0.95 * 255) {
-          ctx.fillStyle = `hsl(${hue} 90% 55%)`
+          ctx.fillStyle = `hsl(${hue} ${satPct}% 55%)`
           ctx.fillText('+', x * cellW + cellW / 2, y * cellH + cellH / 2)
         } else {
           const idx = Math.floor((hue / 360) * charCount)
-          ctx.fillStyle = `hsl(${hue} 90% 50%)`
+          ctx.fillStyle = `hsl(${hue} ${satPct}% 50%)`
           ctx.fillText(alphabet[idx], x * cellW + cellW / 2, y * cellH + cellH / 2)
         }
         i += 4
