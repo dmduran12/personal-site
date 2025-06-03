@@ -95,11 +95,6 @@ export function HeroMontage() {
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
       <AsciiLayer target={videoRef} ready={!!data} onError={setAsciiError} />
-      <div className="absolute bottom-4 left-4 pointer-events-none">
-        <span className="font-micro5 font-extrabold border-2 border-white p-0.5 text-white">
-          DANNY DURAN
-        </span>
-      </div>
     </section>
   )
 }
