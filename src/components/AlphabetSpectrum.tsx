@@ -1,10 +1,10 @@
 import React from 'react'
 
 export function AlphabetSpectrum() {
-  const chars = 'ABCDEFGHIJK+MNOPQRSTUVWXYZ'.split('')
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
   const classes = [
-    'hsl0','hsl15','hsl30','hsl45','hsl60','hsl75','hsl90','hsl105','hsl120','hsl135','hsl150',
-    'hsl165','hsl180','hsl195','hsl210','hsl225','hsl240','hsl255','hsl270','hsl285','hsl300','hsl315','hsl330','hsl345','hsl360'
+    'hsl0','hsl14','hsl28','hsl42','hsl56','hsl70','hsl84','hsl98','hsl112','hsl126','hsl140',
+    'hsl154','hsl168','hsl182','hsl196','hsl210','hsl224','hsl238','hsl252','hsl266','hsl280','hsl294','hsl308','hsl322','hsl336','hsl350'
   ]
   return (
     <div className="pointer-events-none absolute bottom-4 w-full text-center text-4xl">

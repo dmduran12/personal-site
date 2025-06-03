@@ -9,29 +9,30 @@
 }
 
 @layer utilities {
-  .hsl0  { color: hsl(0 90% 50%); }
-  .hsl15 { color: hsl(15 90% 50%); }
-  .hsl30 { color: hsl(30 90% 50%); }
-  .hsl45 { color: hsl(45 90% 50%); }
-  .hsl60 { color: hsl(60 90% 50%); }
-  .hsl75 { color: hsl(75 90% 50%); }
-  .hsl90 { color: hsl(90 90% 50%); }
-  .hsl105{ color: hsl(105 90% 50%); }
-  .hsl120{ color: hsl(120 90% 50%); }
-  .hsl135{ color: hsl(135 90% 50%); }
-  .hsl150{ color: hsl(150 90% 50%); }
-  .hsl165{ color: hsl(165 90% 55%); }
-  .hsl180{ color: hsl(180 90% 50%); }
-  .hsl195{ color: hsl(195 90% 50%); }
-  .hsl210{ color: hsl(210 90% 50%); }
-  .hsl225{ color: hsl(225 90% 50%); }
-  .hsl240{ color: hsl(240 90% 50%); }
-  .hsl255{ color: hsl(255 90% 50%); }
-  .hsl270{ color: hsl(270 90% 50%); }
-  .hsl285{ color: hsl(285 90% 50%); }
-  .hsl300{ color: hsl(300 90% 50%); }
-  .hsl315{ color: hsl(315 90% 50%); }
-  .hsl330{ color: hsl(330 90% 50%); }
-  .hsl345{ color: hsl(345 90% 50%); }
-  .hsl360{ color: hsl(360 90% 50%); }
+  .hsl0   { color: hsl(0 90% 50%); }
+  .hsl14  { color: hsl(14 90% 50%); }
+  .hsl28  { color: hsl(28 90% 50%); }
+  .hsl42  { color: hsl(42 90% 50%); }
+  .hsl56  { color: hsl(56 90% 50%); }
+  .hsl70  { color: hsl(70 90% 50%); }
+  .hsl84  { color: hsl(84 90% 50%); }
+  .hsl98  { color: hsl(98 90% 50%); }
+  .hsl112 { color: hsl(112 90% 50%); }
+  .hsl126 { color: hsl(126 90% 50%); }
+  .hsl140 { color: hsl(140 90% 50%); }
+  .hsl154 { color: hsl(154 90% 50%); }
+  .hsl168 { color: hsl(168 90% 50%); }
+  .hsl182 { color: hsl(182 90% 50%); }
+  .hsl196 { color: hsl(196 90% 50%); }
+  .hsl210 { color: hsl(210 90% 50%); }
+  .hsl224 { color: hsl(224 90% 50%); }
+  .hsl238 { color: hsl(238 90% 50%); }
+  .hsl252 { color: hsl(252 90% 50%); }
+  .hsl266 { color: hsl(266 90% 50%); }
+  .hsl280 { color: hsl(280 90% 50%); }
+  .hsl294 { color: hsl(294 90% 50%); }
+  .hsl308 { color: hsl(308 90% 50%); }
+  .hsl322 { color: hsl(322 90% 50%); }
+  .hsl336 { color: hsl(336 90% 50%); }
+  .hsl350 { color: hsl(350 90% 50%); }
 }
