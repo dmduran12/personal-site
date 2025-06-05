@@ -47,9 +47,9 @@ function startAscii(
   let raf: number
 
   const lines = ['DANNY', 'DURAN']
-  // tighten spacing around the overlay text
-  const charScale = 5.6
-  const lineScale = 5
+  // spacing for the overlay text
+  const charScale = 6
+  const lineScale = 6
   let bounds: { x: number; y: number; w: number; h: number } | null = null
 
   const draw = () => {
