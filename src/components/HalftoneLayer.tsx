@@ -8,7 +8,6 @@ function startHalftone(
   canvas.width = video.videoWidth || video.clientWidth
   canvas.height = video.videoHeight || video.clientHeight
   const ctx = canvas.getContext('2d')!
-  const lineColor = '#f8f8f5'
   const bgColor = '#1a1a1a'
   let prevW = sizeRef.current.w
   let prevH = sizeRef.current.h
@@ -28,7 +27,6 @@ function startHalftone(
 
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = lineColor
 
     let i = 0
     for (let y = 0; y < rows; y++) {
@@ -36,12 +34,13 @@ function startHalftone(
         const r = data[i]
         const g = data[i + 1]
         const b = data[i + 2]
-        const lum = r * 0.2126 + g * 0.7152 + b * 0.0722
-        const lineH = (lum / 255) * cellH
-        if (lineH > 0) {
-          const xPos = x * cellW
-          const yPos = y * cellH + (cellH - lineH) / 2
-          ctx.fillRect(xPos, yPos, cellW, lineH)
+        const lum = (r * 0.2126 + g * 0.7152 + b * 0.0722) * 0.7
+        const lineW = (lum / 255) * cellW
+        if (lineW > 0) {
+          const xPos = x * cellW + (cellW - lineW) / 2
+          const yPos = y * cellH
+          ctx.fillStyle = `rgb(${r},${g},${b})`
+          ctx.fillRect(xPos, yPos, lineW, cellH)
         }
         i += 4
       }
