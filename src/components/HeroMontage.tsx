@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, MutableRefObject } from 'react'
 import useSWR from 'swr'
-import { AsciiLayer } from './AsciiLayer'
+import { HalftoneLayer } from './HalftoneLayer'
 
 type VideoData = { src: string; width: number; height: number }
 
@@ -57,7 +57,7 @@ export function HeroMontage({
   )
   const videoRef = useRef<HTMLVideoElement>(null)
   const [videoError, setVideoError] = useState<string | null>(null)
-  const [asciiError, setAsciiError] = useState<string | null>(null)
+  const [halftoneError, setHalftoneError] = useState<string | null>(null)
 
   useEffect(() => {
     const video = videoRef.current
@@ -78,10 +78,10 @@ export function HeroMontage({
   }, [data])
 
 
-  if (error || videoError || asciiError) {
+  if (error || videoError || halftoneError) {
     return (
       <div className="p-4 text-red-500">
-        {error ? error.message : videoError || asciiError}
+        {error ? error.message : videoError || halftoneError}
       </div>
     )
   }
@@ -98,11 +98,11 @@ export function HeroMontage({
         crossOrigin="anonymous"
         className="absolute inset-0 h-full w-full object-cover opacity-0"
       />
-      <AsciiLayer
+      <HalftoneLayer
         target={videoRef}
         ready={!!data}
         sizeRef={cellSizeRef}
-        onError={setAsciiError}
+        onError={setHalftoneError}
       />
     </section>
   )

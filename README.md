@@ -1,6 +1,6 @@
 # Personal Site
 
-This repo contains a React/Vite project that plays a Vimeo video and renders it as real-time ASCII art. Follow these steps to run it locally.
+This repo contains a React/Vite project that plays a Vimeo video and renders it with a real-time halftone effect. Follow these steps to run it locally.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/) 18+ (Corepack enabled)
@@ -54,8 +54,8 @@ The static files will be in the `dist/` directory.
 A GitHub Action in `.github/workflows/deploy.yml` builds the project when you push changes.
 
 ## Notes
-- The ASCII worker implements a simple shader pipeline for real-time rendering.
-- The shader now renders with a neon palette and a tighter 6x8 grid using a cryptic character set.
+- The halftone renderer uses Canvas 2D to draw AM lines in real time.
+- The effect still relies on a tight 6x8 sampling grid for performance.
 
 ## Troubleshooting
 
@@ -71,6 +71,6 @@ rm -rf node_modules package-lock.json yarn.lock
 corepack pnpm install
 ```
 
-### Video loads but ASCII output is missing
+### Video loads but halftone output is missing
 
 If `OffscreenCanvas` or `WebGL2` aren't available, the app automatically falls back to a slower Canvas 2D renderer. Ensure cross-origin video playback is allowed.
